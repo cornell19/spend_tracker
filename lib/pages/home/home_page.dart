@@ -18,13 +18,14 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: const Text(
-          'My First Page',
-          style: TextStyle(
-            fontSize: 20,
-          ),
-        ),
-      ),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text('one'),
+          const Text('two'),
+          const Text('three'),
+        ],
+      )),
     );
   }
 }
