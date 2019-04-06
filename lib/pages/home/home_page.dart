@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
           const Text('two'),
           const Text('three'),
           Image.network(
-            'https://images.manning.com/720/960/resize/video/c/79a726d-5a58-4be4-9162-99bd63467b98/livevideo-flutter-in-motion-meap.png',
+            'https://raw.githubusercontent.com/cornell19/images/master/FlutterInMotion.jpg',
             height: 200,
           ),
         ],
