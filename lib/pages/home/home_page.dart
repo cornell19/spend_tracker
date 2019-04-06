@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spend_tracker/pages/home/widgets/custom_text.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
                   color: Colors.green,
                   fontWeight: FontWeight.bold,
                   decoration: TextDecoration.underline)),
-          const Text('two'),
+          const CustomText(text: 'two'),
           const Text('three'),
           Image.network(
             'https://raw.githubusercontent.com/cornell19/images/master/FlutterInMotion.jpg',
