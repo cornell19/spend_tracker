@@ -24,17 +24,18 @@ class HomePage extends StatelessWidget {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text('one',
-              style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline)),
-          const CustomText(text: 'two'),
-          const Text('three'),
-          Image.network(
-            'https://raw.githubusercontent.com/cornell19/images/master/FlutterInMotion.jpg',
-            height: 200,
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            constraints: BoxConstraints(maxWidth: 100),
+            alignment: Alignment.center,
+            child: const Text('Home'),
+            color: Colors.greenAccent,
+          ),
+          Container(
+            constraints: BoxConstraints(maxWidth: 100),
+            alignment: Alignment.center,
+            child: const Text('Below'),
+            color: Colors.greenAccent,
           ),
         ],
       )),
