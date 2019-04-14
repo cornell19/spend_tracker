@@ -4,6 +4,7 @@ import 'package:spend_tracker/pages/home/widgets/custom_text.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var amount = '1,203.00';
     return Scaffold(
       appBar: AppBar(
         leading: Icon(
@@ -20,25 +21,42 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: 10),
-            constraints: BoxConstraints(maxWidth: 100),
+            height: 100,
+            margin: EdgeInsets.all(10),
             alignment: Alignment.center,
-            child: const Text('Home'),
-            color: Colors.greenAccent,
-          ),
-          Container(
-            constraints: BoxConstraints(maxWidth: 100),
-            alignment: Alignment.center,
-            child: const Text('Below'),
-            color: Colors.greenAccent,
+            child: Text(
+              '\$$amount',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 40,
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.green,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.green,
+                  Colors.white54,
+                  Colors.blueGrey,
+                ],
+                stops: [0.85, 0.95, 1.0],
+              ),
+              boxShadow: [
+                BoxShadow(color: Colors.grey, offset: Offset(4, 4)),
+              ],
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
           ),
         ],
-      )),
+      ),
     );
   }
 }
