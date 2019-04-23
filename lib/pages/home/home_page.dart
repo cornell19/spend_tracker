@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spend_tracker/pages/home/widgets/menu.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -6,11 +7,6 @@ class HomePage extends StatelessWidget {
     var amount = '1,203.00';
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.menu,
-          size: 40,
-          color: Colors.yellow,
-        ),
         title: const Text('Home'),
         actions: <Widget>[
           IconButton(
@@ -20,6 +16,7 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
+      drawer: Menu(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
