@@ -48,7 +48,7 @@ class _AccountPageState extends State<AccountPage> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Balance'),
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   validator: (String value) {
                     if (value.isEmpty) return 'Required';
                     if (double.tryParse(value) == null) return 'Invalid number';
