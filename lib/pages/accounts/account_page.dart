@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spend_tracker/pages/icons/icons_page.dart';
+import 'package:spend_tracker/pages/icons/icon_holder.dart';
 
 class AccountPage extends StatefulWidget {
   @override
@@ -31,34 +31,13 @@ class _AccountPageState extends State<AccountPage> {
             padding: EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
-                InkWell(
-                  onTap: () async {
-                    var iconData = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => IconsPage(),
-                      ),
-                    );
-
+                IconHolder(
+                  newIcon: _newIcon,
+                  onIconChange: (iconData) {
                     setState(() {
                       _newIcon = iconData;
                     });
                   },
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.blueAccent,
-                      ),
-                    ),
-                    child: Icon(
-                      _newIcon == null ? Icons.add : _newIcon,
-                      size: 60,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Name'),
