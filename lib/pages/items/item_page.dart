@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ItemPage extends StatefulWidget {
+  ItemPage({
+    Key key,
+    @required this.isDeposit,
+  });
+  final bool isDeposit;
   @override
   _ItemPageState createState() => _ItemPageState();
 }
@@ -9,8 +14,13 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   Map<String, dynamic> _formData = Map<String, dynamic>();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _isDeposit = true;
   DateTime _dateTime = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _formData['isDeposit'] = widget.isDeposit;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +61,10 @@ class _ItemPageState extends State<ItemPage> {
               Row(
                 children: [
                   Checkbox(
-                    value: _isDeposit,
+                    value: _formData['isDeposit'],
                     onChanged: (bool value) {
                       setState(() {
-                        _isDeposit = value;
+                        _formData['isDeposit'] = value;
                       });
                     },
                   ),
@@ -86,7 +96,6 @@ class _ItemPageState extends State<ItemPage> {
                 decoration: InputDecoration(labelText: 'Account'),
                 value: _formData['accountId'],
                 onChanged: (int value) {
-                  _formData['accountId'] = value;
                   setState(() {
                     _formData['accountId'] = value;
                   });
@@ -107,7 +116,6 @@ class _ItemPageState extends State<ItemPage> {
                 decoration: InputDecoration(labelText: 'Type'),
                 value: _formData['typeId'],
                 onChanged: (int value) {
-                  _formData['typeId'] = value;
                   setState(() {
                     _formData['typeId'] = value;
                   });
