@@ -11,6 +11,7 @@ class _ItemPageState extends State<ItemPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isDeposit = true;
   DateTime _dateTime = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +79,49 @@ class _ItemPageState extends State<ItemPage> {
                       });
                     },
                   ),
-                  Text(DateFormat('MM/dd/yyyy').format(_dateTime))
+                  Text(DateFormat('MM/dd/yyyy').format(_dateTime)),
+                ],
+              ),
+              DropdownButtonFormField<int>(
+                decoration: InputDecoration(labelText: 'Account'),
+                value: _formData['accountId'],
+                onChanged: (int value) {
+                  _formData['accountId'] = value;
+                  setState(() {
+                    _formData['accountId'] = value;
+                  });
+                },
+                validator: (int value) => value == null ? 'Required' : null,
+                items: [
+                  DropdownMenuItem<int>(
+                    value: 1,
+                    child: Text('Checking'),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 2,
+                    child: Text('Credit Card'),
+                  ),
+                ],
+              ),
+              DropdownButtonFormField<int>(
+                decoration: InputDecoration(labelText: 'Type'),
+                value: _formData['typeId'],
+                onChanged: (int value) {
+                  _formData['typeId'] = value;
+                  setState(() {
+                    _formData['typeId'] = value;
+                  });
+                },
+                validator: (int value) => value == null ? 'Required' : null,
+                items: [
+                  DropdownMenuItem<int>(
+                    value: 1,
+                    child: Text('Rent'),
+                  ),
+                  DropdownMenuItem<int>(
+                    value: 2,
+                    child: Text('Dinner'),
+                  ),
                 ],
               ),
             ],

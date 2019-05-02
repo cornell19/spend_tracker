@@ -35,9 +35,10 @@ class HomePage extends StatelessWidget {
               )),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
+      floatingActionButton: PopupMenuButton(
+        child: Icon(Icons.add_circle,
+            size: 60, color: Theme.of(context).primaryColor),
+        onSelected: (int value) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -45,8 +46,17 @@ class HomePage extends StatelessWidget {
             ),
           );
         },
+        itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: 1,
+                child: Text('Deposit'),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: Text('Withdraw'),
+              ),
+            ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
