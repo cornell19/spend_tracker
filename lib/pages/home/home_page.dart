@@ -35,15 +35,29 @@ class HomePage extends StatelessWidget {
               )),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: PopupMenuButton(
         child: Icon(
-          Icons.add,
+          Icons.add_circle,
+          size: 60,
+          color: Theme.of(context).primaryColor,
         ),
-        onPressed: () {
+        itemBuilder: (_) => [
+              PopupMenuItem(
+                value: 1,
+                child: const Text('Deposit'),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: const Text('Withdraw'),
+              )
+            ],
+        onSelected: (int value) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => ItemPage(),
+              builder: (_) => ItemPage(
+                    isDeposit: value == 1,
+                  ),
             ),
           );
         },
