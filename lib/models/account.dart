@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:spend_tracker/support/icon_helper.dart';
 
 class Account {
   Account({
@@ -12,6 +14,8 @@ class Account {
   final String name;
   final int codePoint;
   final double balance;
+
+  IconData get iconData => IconHelper.createIconData(codePoint);
 
   Map<String, dynamic> toMap() =>
       {'id': id, 'name': name, 'codePoint': codePoint, 'balance': balance};
