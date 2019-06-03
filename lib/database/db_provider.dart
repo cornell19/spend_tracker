@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:path/path.dart';
+import 'package:spend_tracker/models/Item_type.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spend_tracker/models/account.dart';
@@ -34,6 +35,25 @@ class DbProvider {
     return list;
   }
 
+  Future<int> createType(ItemType type) async {
+    final db = await database;
+    return await db.insert('ItemType', type.toMap());
+  }
+
+  Future<int> updateType(ItemType type) async {
+    final db = await database;
+    return await db.update('ItemType', type.toMap(),
+        where: "id = ?", whereArgs: [type.id]);
+  }
+
+  Future<List<ItemType>> getAllTypes() async {
+    final db = await database;
+    var res = await db.query('ItemType');
+    List<ItemType> list =
+        res.isNotEmpty ? res.map((t) => ItemType.fromMap(t)).toList() : [];
+    return list;
+  }
+
   void dispose() {
     _database?.close();
     _database = null;
@@ -60,6 +80,11 @@ class DbProvider {
         "name TEXT,"
         "codePoint INTEGER,"
         "balance REAL"
+        ")");
+    await db.execute("CREATE TABLE ItemType ("
+        "id INTEGER PRIMARY KEY,"
+        "name TEXT,"
+        "codePoint INTEGER"
         ")");
   }
 }
