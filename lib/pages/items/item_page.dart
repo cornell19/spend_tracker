@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:spend_tracker/database/db_provider.dart';
+import 'package:spend_tracker/models/Item_type.dart';
+import 'package:spend_tracker/models/account.dart';
+import 'package:spend_tracker/models/item.dart';
 
 class ItemPage extends StatefulWidget {
   ItemPage({@required this.isDeposit});
@@ -11,13 +16,33 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   Map<String, dynamic> _formData = Map<String, dynamic>();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  List<Account> _accounts = [];
+  List<ItemType> _types = [];
   DateTime _dateTime = DateTime.now();
 
   @override
   void initState() {
     super.initState();
     _formData['isDeposit'] = widget.isDeposit;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadDropdownData();
+  }
+
+  void _loadDropdownData() async {
+    var dbProvider = Provider.of<DbProvider>(context);
+    var accounts = await dbProvider.getAllAccounts();
+    var types = await dbProvider.getAllTypes();
+
+    if (!mounted) return;
+
+    setState(() {
+      _accounts = accounts;
+      _types = types;
+    });
   }
 
   @override
@@ -31,6 +56,10 @@ class _ItemPageState extends State<ItemPage> {
             onPressed: () {
               if (!_formKey.currentState.validate()) return;
               _formKey.currentState.save();
+              var dbProvider = Provider.of<DbProvider>(context);
+              _formData['date'] = DateFormat('MM/dd/yyyy').format(_dateTime);
+              var item = Item.fromMap(_formData);
+              dbProvider.createItem(item);
               Navigator.of(context).pop();
             },
           )
@@ -96,16 +125,12 @@ class _ItemPageState extends State<ItemPage> {
               DropdownButtonFormField<int>(
                 value: _formData['accountId'],
                 decoration: InputDecoration(labelText: 'Account'),
-                items: [
-                  DropdownMenuItem<int>(
-                    value: 1,
-                    child: const Text('Checking'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 2,
-                    child: const Text('Credit Card'),
-                  ),
-                ],
+                items: _accounts
+                    .map((a) => DropdownMenuItem<int>(
+                          value: a.id,
+                          child: Text(a.name),
+                        ))
+                    .toList(),
                 validator: (int value) => value == null ? 'Required' : null,
                 onChanged: (int value) {
                   setState(() {
@@ -116,16 +141,10 @@ class _ItemPageState extends State<ItemPage> {
               DropdownButtonFormField<int>(
                 decoration: InputDecoration(labelText: 'Type'),
                 value: _formData['typeId'],
-                items: [
-                  DropdownMenuItem<int>(
-                    value: 1,
-                    child: const Text('Rent'),
-                  ),
-                  DropdownMenuItem<int>(
-                    value: 2,
-                    child: const Text('Dinner'),
-                  ),
-                ],
+                items: _types
+                    .map((t) =>
+                        DropdownMenuItem<int>(value: t.id, child: Text(t.name)))
+                    .toList(),
                 onChanged: (int value) {
                   setState(() {
                     _formData['typeId'] = value;

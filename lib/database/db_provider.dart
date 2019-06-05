@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:spend_tracker/models/Item_type.dart';
+import 'package:spend_tracker/models/item.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:spend_tracker/models/account.dart';
@@ -54,6 +55,27 @@ class DbProvider {
     return list;
   }
 
+  Future createItem(Item item) async {
+    final db = await database;
+    var accounts = await db
+        .query('Account', where: "id = ? ", whereArgs: [item.accountId]);
+    var account = Account.fromMap(accounts[0]);
+    var balance = account.balance;
+
+    if (item.isDeposit)
+      balance += item.amount;
+    else
+      balance -= item.amount;
+
+    await db.transaction((txn) async {
+      await txn.rawUpdate(
+          'UPDATE Account SET balance = ${balance.toString()} ' +
+              'WHERE id = ${account.id.toString()}');
+
+      await txn.insert('Item', item.toMap());
+    });
+  }
+
   void dispose() {
     _database?.close();
     _database = null;
@@ -86,5 +108,24 @@ class DbProvider {
         "name TEXT,"
         "codePoint INTEGER"
         ")");
+    await db.execute("CREATE TABLE Item ("
+        "id INTEGER PRIMARY KEY,"
+        "description TEXT,"
+        "typeId INTEGER,"
+        "amount REAL,"
+        "date TEXT,"
+        "isDeposit INTEGER,"
+        "accountId INTEGER,"
+        "FOREIGN KEY(typeId) REFERENCES Type(id),"
+        "FOREIGN KEY(accountId) REFERENCES account(id)"
+        ")");
+    await db.execute("INSERT INTO Account (id, name, codePoint, balance) "
+        "values(1, 'Checking', 59471, 0.00)");
+    await db.execute("INSERT INTO Account (id, name, codePoint, balance) "
+        "values(2, 'Saving', 59471, 0.00)");
+    await db.execute("INSERT INTO ItemType (id, name, codePoint) "
+        "values(1, 'Paycheck', 59471)");
+    await db.execute("INSERT INTO ItemType (id, name, codePoint) "
+        "values(2, ' ATM Withdraw', 59471)");
   }
 }
