@@ -76,6 +76,34 @@ class DbProvider {
     });
   }
 
+  Future<List<Item>> getAllItems() async {
+    final db = await database;
+    var res = await db.query('Item');
+    List<Item> list =
+        res.isNotEmpty ? res.map((i) => Item.fromMap(i)).toList() : [];
+    return list;
+  }
+
+  Future deleteItem(Item item) async {
+    final db = await database;
+    var accounts =
+        await db.query('Account', where: "id =?", whereArgs: [item.accountId]);
+    var account = Account.fromMap(accounts[0]);
+    var balance = account.balance;
+
+    if (item.isDeposit)
+      balance -= item.amount;
+    else
+      balance += item.amount;
+
+    await db.transaction((txn) async {
+      await txn.rawUpdate(
+          "UPDATE Account SET balance = ${balance.toString()} " +
+              "WHERE id = ${account.id.toString()}");
+      await txn.delete('Item', where: "id = ?", whereArgs: [item.id]);
+    });
+  }
+
   void dispose() {
     _database?.close();
     _database = null;
