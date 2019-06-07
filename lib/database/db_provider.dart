@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:spend_tracker/models/Item_type.dart';
+import 'package:spend_tracker/models/balance.dart';
 import 'package:spend_tracker/models/item.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +16,23 @@ class DbProvider {
       _database = await _initialize();
     }
     return _database;
+  }
+
+  Future<Balance> getBalance() async {
+    final items = await getAllItems();
+    double withdraw = 0;
+    double deposit = 0;
+    items.forEach((i) {
+      if (i.isDeposit)
+        deposit += i.amount;
+      else
+        withdraw += i.amount;
+    });
+    return Balance(
+      deposit: deposit,
+      withdraw: withdraw,
+      total: deposit - withdraw,
+    );
   }
 
   Future<int> createAccount(Account account) async {
