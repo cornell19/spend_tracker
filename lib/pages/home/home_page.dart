@@ -29,6 +29,16 @@ class _HomePageState extends State<HomePage> {
   void _setHeightBalances(Balance balance) {
     var maxAmount =
         balance.withdraw > balance.deposit ? balance.withdraw : balance.deposit;
+    if (maxAmount == 0) {
+      setState(() {
+        _wHeight = 0;
+        _dHeight = 0;
+        _withdraw = 0;
+        _deposit = 0;
+        _balance = 0;
+      });
+      return;
+    }
     var maxHeight = MediaQuery.of(context).size.height - 284;
     var wHeight = (balance.withdraw / maxAmount) * maxHeight;
     var dHeight = (balance.deposit / maxAmount) * maxHeight;
