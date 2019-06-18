@@ -7,3 +7,5 @@ final routes = {
   '/items': (BuildContext context) => ItemsPage(),
   '/types': (BuildContext context) => TypesPage(),
 };
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();

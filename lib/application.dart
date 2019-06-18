@@ -11,12 +11,14 @@ class Application extends StatelessWidget {
       builder: (_) => DbProvider(),
       dispose: (_, value) => value.dispose(),
       child: MaterialApp(
-          title: 'Spend Tracker',
-          theme: ThemeData(
-            primarySwatch: Colors.green,
-          ),
-          initialRoute: '/',
-          routes: routes),
+        title: 'Spend Tracker',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        initialRoute: '/',
+        routes: routes,
+        navigatorObservers: [routeObserver],
+      ),
     );
   }
 }

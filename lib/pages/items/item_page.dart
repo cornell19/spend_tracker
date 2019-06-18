@@ -5,6 +5,7 @@ import 'package:spend_tracker/database/db_provider.dart';
 import 'package:spend_tracker/models/Item_type.dart';
 import 'package:spend_tracker/models/account.dart';
 import 'package:spend_tracker/models/item.dart';
+import 'package:spend_tracker/routes.dart';
 
 class ItemPage extends StatefulWidget {
   ItemPage({@required this.isDeposit});
@@ -13,7 +14,7 @@ class ItemPage extends StatefulWidget {
   _ItemPageState createState() => _ItemPageState();
 }
 
-class _ItemPageState extends State<ItemPage> {
+class _ItemPageState extends State<ItemPage> with RouteAware {
   Map<String, dynamic> _formData = Map<String, dynamic>();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   List<Account> _accounts = [];
@@ -31,6 +32,21 @@ class _ItemPageState extends State<ItemPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _loadDropdownData();
+    routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    routeObserver.unsubscribe(this);
+  }
+
+  void didPop() {
+    print('did pop');
+  }
+
+  void didPush() {
+    print('did push');
   }
 
   void _loadDropdownData() async {
