@@ -15,7 +15,7 @@ class TypePage extends StatefulWidget {
 class _TypePageState extends State<TypePage> {
   Map<String, dynamic> _data;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool _hasChanges = false;
   @override
   void initState() {
     super.initState();
@@ -51,6 +51,35 @@ class _TypePageState extends State<TypePage> {
       ),
       body: Form(
         key: _formKey,
+        onWillPop: () {
+          if (_hasChanges) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm'),
+                    content: const Text('Discard Changes?'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: const Text('Yes'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: const Text('No'),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  );
+                });
+            return Future.value(false);
+          }
+
+          return Future.value(true);
+        },
+        onChanged: () => _hasChanges = true,
         child: Padding(
           padding: EdgeInsets.all(10),
           child: Column(
@@ -58,6 +87,7 @@ class _TypePageState extends State<TypePage> {
               IconHolder(
                 newIcon: IconHelper.createIconData(_data['codePoint']),
                 onIconChange: (iconData) {
+                  _hasChanges = true;
                   setState(() {
                     _data['codePoint'] = iconData.codePoint;
                   });
