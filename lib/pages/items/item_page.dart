@@ -19,6 +19,7 @@ class _ItemPageState extends State<ItemPage> {
   List<Account> _accounts = [];
   List<ItemType> _types = [];
   DateTime _dateTime = DateTime.now();
+  bool _hasChanges = false;
 
   @override
   void initState() {
@@ -67,6 +68,35 @@ class _ItemPageState extends State<ItemPage> {
       ),
       body: Form(
         key: _formKey,
+        onWillPop: () {
+          if (_hasChanges) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm'),
+                    content: const Text('Discard Changes?'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: const Text('Yes'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: const Text('No'),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ],
+                  );
+                });
+            return Future.value(false);
+          }
+
+          return Future.value(true);
+        },
+        onChanged: () => _hasChanges = true,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -90,6 +120,7 @@ class _ItemPageState extends State<ItemPage> {
                   Checkbox(
                     value: _formData['isDeposit'],
                     onChanged: (bool value) {
+                      _hasChanges = true;
                       setState(() {
                         _formData['isDeposit'] = value;
                       });
@@ -113,7 +144,7 @@ class _ItemPageState extends State<ItemPage> {
                       );
 
                       if (date == null) return;
-
+                      _hasChanges = true;
                       setState(() {
                         _dateTime = date;
                       });
@@ -133,6 +164,7 @@ class _ItemPageState extends State<ItemPage> {
                     .toList(),
                 validator: (int value) => value == null ? 'Required' : null,
                 onChanged: (int value) {
+                  _hasChanges = true;
                   setState(() {
                     _formData['accountId'] = value;
                   });
@@ -146,6 +178,7 @@ class _ItemPageState extends State<ItemPage> {
                         DropdownMenuItem<int>(value: t.id, child: Text(t.name)))
                     .toList(),
                 onChanged: (int value) {
+                  _hasChanges = true;
                   setState(() {
                     _formData['typeId'] = value;
                   });
