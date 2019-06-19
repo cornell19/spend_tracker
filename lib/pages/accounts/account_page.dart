@@ -88,6 +88,7 @@ class _AccountPageState extends State<AccountPage> {
                 IconHolder(
                   newIcon: IconHelper.createIconData(_data['codePoint']),
                   onIconChange: (iconData) {
+                    if (iconData == null) return;
                     _hasChanges = true;
                     setState(() {
                       _data['codePoint'] = iconData.codePoint;

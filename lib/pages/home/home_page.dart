@@ -12,7 +12,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with RouteAware {
+class _HomePageState extends State<HomePage>
+    with RouteAware, WidgetsBindingObserver {
   double _withdraw = 0;
   double _deposit = 0;
   double _wHeight = 0;
@@ -26,12 +27,20 @@ class _HomePageState extends State<HomePage> with RouteAware {
     var balance = await dbProvider.getBalance();
     _setHeightBalances(balance);
     routeObserver.subscribe(this, ModalRoute.of(context));
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     super.dispose();
     routeObserver.unsubscribe(this);
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed)
+      Navigator.pushReplacementNamed(context, '/');
   }
 
   void didPopNext() {
