@@ -51,7 +51,10 @@ class TypesPage extends StatelessWidget {
                   var type = types[index];
 
                   return ListTile(
-                    leading: Icon(type.iconData),
+                    leading: Hero(
+                      tag: type.id,
+                      child: Icon(type.iconData),
+                    ),
                     title: Text(type.name),
                     onTap: () {
                       Navigator.push(

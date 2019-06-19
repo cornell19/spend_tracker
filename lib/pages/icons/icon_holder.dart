@@ -8,10 +8,12 @@ class IconHolder extends StatelessWidget {
     Key key,
     @required this.newIcon,
     @required this.onIconChange,
+    @required this.tagId,
   }) : super(key: key);
 
   final IconData newIcon;
   final OnIconChange onIconChange;
+  final int tagId;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +37,13 @@ class IconHolder extends StatelessWidget {
             color: Colors.blueAccent,
           ),
         ),
-        child: Icon(
-          newIcon == null ? Icons.add : newIcon,
-          size: 60,
-          color: Colors.blueGrey,
+        child: Hero(
+          tag: tagId,
+          child: Icon(
+            newIcon == null ? Icons.add : newIcon,
+            size: 60,
+            color: Colors.blueGrey,
+          ),
         ),
       ),
     );

@@ -86,6 +86,7 @@ class _AccountPageState extends State<AccountPage> {
             child: Column(
               children: <Widget>[
                 IconHolder(
+                  tagId: widget.account == null ? 0 : widget.account.id,
                   newIcon: IconHelper.createIconData(_data['codePoint']),
                   onIconChange: (iconData) {
                     if (iconData == null) return;

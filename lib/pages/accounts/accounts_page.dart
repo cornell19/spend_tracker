@@ -51,7 +51,10 @@ class AccountsPage extends StatelessWidget {
             itemBuilder: (_, int index) {
               var account = accounts[index];
               return ListTile(
-                leading: Icon(account.iconData),
+                leading: Hero(
+                  tag: account.id,
+                  child: Icon(account.iconData),
+                ),
                 title: Text(account.name),
                 trailing: Text('\$${formatter.format(account.balance)}'),
                 onTap: () {
