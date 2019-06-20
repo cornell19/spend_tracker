@@ -19,7 +19,8 @@ class _HomePageState extends State<HomePage>
   double _wHeight = 0;
   double _dHeight = 0;
   double _balance = 0;
-
+  double _opacity = 0.2;
+  double _fontSize = 1;
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
@@ -73,6 +74,8 @@ class _HomePageState extends State<HomePage>
       _withdraw = balance.withdraw;
       _deposit = balance.deposit;
       _balance = balance.total;
+      _opacity = 1.0;
+      _fontSize = 40;
     });
   }
 
@@ -95,7 +98,14 @@ class _HomePageState extends State<HomePage>
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _TotalBudget(amount: formatter.format(_balance)),
+          AnimatedOpacity(
+            opacity: _opacity,
+            duration: Duration(seconds: 4),
+            child: _TotalBudget(
+              fontSize: _fontSize,
+              amount: formatter.format(_balance),
+            ),
+          ),
           Container(
               padding: EdgeInsets.only(bottom: 50),
               height: MediaQuery.of(context).size.height - 196,
@@ -177,21 +187,25 @@ class _TotalBudget extends StatelessWidget {
   const _TotalBudget({
     Key key,
     @required this.amount,
+    @required this.fontSize,
   }) : super(key: key);
 
   final String amount;
-
+  final double fontSize;
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 100,
       margin: EdgeInsets.all(10),
       alignment: Alignment.center,
-      child: Text(
-        '\$$amount',
+      child: AnimatedDefaultTextStyle(
+        duration: Duration(seconds: 3),
         style: TextStyle(
           color: Colors.white,
-          fontSize: 40,
+          fontSize: fontSize,
+        ),
+        child: Text(
+          '\$$amount',
         ),
       ),
       decoration: BoxDecoration(
