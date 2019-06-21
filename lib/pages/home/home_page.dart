@@ -13,7 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with RouteAware, WidgetsBindingObserver {
+    with RouteAware, WidgetsBindingObserver, TickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animation;
   double _withdraw = 0;
   double _deposit = 0;
   double _wHeight = 0;
@@ -21,6 +23,18 @@ class _HomePageState extends State<HomePage>
   double _balance = 0;
   double _opacity = 0.2;
   double _fontSize = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
+    _controller.forward();
+  }
+
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
@@ -36,6 +50,7 @@ class _HomePageState extends State<HomePage>
     super.dispose();
     routeObserver.unsubscribe(this);
     WidgetsBinding.instance.removeObserver(this);
+    _controller?.dispose();
   }
 
   @override
@@ -44,12 +59,14 @@ class _HomePageState extends State<HomePage>
       Navigator.pushReplacementNamed(context, '/');
   }
 
+  @override
   void didPopNext() {
-    print('did pop next');
+    _controller.forward();
   }
 
+  @override
   void didPushNext() {
-    print('did push next');
+    _controller.reset();
   }
 
   void _setHeightBalances(Balance balance) {
@@ -114,9 +131,9 @@ class _HomePageState extends State<HomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   _BarLine(_wHeight, Colors.red, 'Withdraw',
-                      formatter.format(_withdraw)),
+                      formatter.format(_withdraw), _animation),
                   _BarLine(_dHeight, Colors.green, 'Deposit',
-                      formatter.format(_deposit))
+                      formatter.format(_deposit), _animation)
                 ],
               )),
         ],
@@ -158,24 +175,30 @@ class _BarLine extends StatelessWidget {
     this.height,
     this.color,
     this.label,
-    this.amount, {
+    this.amount,
+    this.animation, {
     Key key,
   }) : super(key: key);
   final double height;
   final String label;
   final Color color;
   final String amount;
+  final Animation<double> animation;
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Container(
-          height: height,
-          width: 100,
-          color: color,
-        ),
+        AnimatedBuilder(
+            animation: animation,
+            builder: (_, __) {
+              return Container(
+                height: animation.value * height,
+                width: 100,
+                color: color,
+              );
+            }),
         Text(label),
         Text(amount),
       ],
