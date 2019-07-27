@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage>
       });
       return;
     }
-    var maxHeight = MediaQuery.of(context).size.height - 300;
+    var maxHeight = MediaQuery.of(context).size.height - 304;
     var wHeight = (balance.withdraw / maxAmount) * maxHeight;
     var dHeight = (balance.deposit / maxAmount) * maxHeight;
     setState(() {
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage>
           ),
           Container(
               padding: EdgeInsets.only(bottom: 50),
-              height: MediaQuery.of(context).size.height - 196,
+              height: MediaQuery.of(context).size.height - 220,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -145,22 +145,22 @@ class _HomePageState extends State<HomePage>
           color: Theme.of(context).primaryColor,
         ),
         itemBuilder: (_) => [
-              PopupMenuItem(
-                value: 1,
-                child: const Text('Deposit'),
-              ),
-              PopupMenuItem(
-                value: 2,
-                child: const Text('Withdraw'),
-              )
-            ],
+          PopupMenuItem(
+            value: 1,
+            child: const Text('Deposit'),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: const Text('Withdraw'),
+          )
+        ],
         onSelected: (int value) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => ItemPage(
-                    isDeposit: value == 1,
-                  ),
+                isDeposit: value == 1,
+              ),
             ),
           );
         },
