@@ -8,3 +8,4 @@ export './items/item_page.dart';
 export './items/items_page.dart';
 export './types/type_page.dart';
 export './types/types_page.dart';
+export './login//login_page.dart';

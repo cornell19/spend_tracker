@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:spend_tracker/pages/index.dart';
 
 final routes = {
-  '/': (BuildContext context) => HomePage(),
-  '/accounts': (BuildContext context) => AccountsPage(),
-  '/items': (BuildContext context) => ItemsPage(),
-  '/types': (BuildContext context) => TypesPage(),
+  '/': (_) => LoginPage(),
+  '/home': (_) => HomePage(),
+  '/accounts': (_) => AccountsPage(),
+  '/items': (_) => ItemsPage(),
+  '/types': (_) => TypesPage(),
 };
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
