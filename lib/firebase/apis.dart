@@ -6,8 +6,40 @@ import 'package:spend_tracker/models/models.dart';
 class Apis {
   static const String server = 'https://www.googleapis.com';
   static const String key = 'AIzaSyD2vHGYh4oFxonSYAf_Ct6HxKlHPVP4440';
+  static const String database = 'https://firestore.googleapis.com/v1';
+  static const String documents =
+      'projects/spendtracker-3e139/databases/(default)/documents';
 
   String _securityToken;
+
+  Future<List<Account>> getAccounts() async {
+    final url = '$database/$documents/account';
+    var response = await http.get(url, headers: _createHeader());
+    _checkStatus(response);
+    return Account.fromJson(response.body);
+  }
+
+  Future createAccount(Account account) async {
+    final url = '$database/$documents/account';
+
+    var response = await http.post(
+      url,
+      headers: _createHeader(),
+      body: account.toJson(),
+    );
+    _checkStatus(response);
+  }
+
+  Future updateAccount(Account account) async {
+    final url = '$database/${account.urlId}';
+
+    var response = await http.patch(
+      url,
+      headers: _createHeader(),
+      body: account.toJson(),
+    );
+    _checkStatus(response);
+  }
 
   Future login(String email, String password) async {
     final String url =
@@ -22,12 +54,16 @@ class Apis {
       }),
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('Login failed');
-    }
+    _checkStatus(response);
 
     var map = json.decode(response.body);
     _securityToken = LoginResponse.fromMap(map).idToken;
+  }
+
+  void _checkStatus(http.Response response) {
+    if (response.statusCode != 200) {
+      throw Exception('Error: ${response.statusCode} ${response.body}');
+    }
   }
 
   Map<String, String> _createHeader() {

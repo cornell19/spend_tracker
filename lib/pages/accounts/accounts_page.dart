@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:spend_tracker/database/db_provider.dart';
+import 'package:spend_tracker/firebase/firebase_bloc.dart';
 import 'package:spend_tracker/models/account.dart';
 import 'package:spend_tracker/pages/accounts/account_page.dart';
 
 class AccountsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var dbProvider = Provider.of<DbProvider>(context);
+    var bloc = Provider.of<FirebaseBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Accounts'),
@@ -26,8 +26,8 @@ class AccountsPage extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder<List<Account>>(
-        future: dbProvider.getAllAccounts(),
+      body: StreamBuilder<List<Account>>(
+        stream: bloc.accounts,
         builder: (_, AsyncSnapshot<List<Account>> snapshot) {
           if (snapshot.hasError)
             return Center(
@@ -52,7 +52,7 @@ class AccountsPage extends StatelessWidget {
               var account = accounts[index];
               return ListTile(
                 leading: Hero(
-                  tag: account.id,
+                  tag: account.urlId,
                   child: Icon(account.iconData),
                 ),
                 title: Text(account.name),

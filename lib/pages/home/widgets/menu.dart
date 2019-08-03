@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:spend_tracker/firebase/firebase_bloc.dart';
 
 class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryColor;
+    var bloc = Provider.of<FirebaseBloc>(context);
     return SizedBox(
       width: 150,
       child: Drawer(
@@ -28,7 +31,10 @@ class Menu extends StatelessWidget {
                 title: 'Accounts',
                 color: color,
                 icon: Icons.account_balance,
-                onTap: () => onNavigate(context, '/accounts')),
+                onTap: () {
+                  bloc.getAccounts();
+                  onNavigate(context, '/accounts');
+                }),
             Divider(
               height: 20,
               color: Colors.black,

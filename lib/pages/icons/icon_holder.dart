@@ -8,13 +8,14 @@ class IconHolder extends StatelessWidget {
     Key key,
     @required this.newIcon,
     @required this.onIconChange,
-    @required this.tagId,
+    this.tagId,
+    this.tagUrlId,
   }) : super(key: key);
 
   final IconData newIcon;
   final OnIconChange onIconChange;
   final int tagId;
-
+  final String tagUrlId;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -38,7 +39,7 @@ class IconHolder extends StatelessWidget {
           ),
         ),
         child: Hero(
-          tag: tagId,
+          tag: tagId == null ? tagUrlId : tagId,
           child: Icon(
             newIcon == null ? Icons.add : newIcon,
             size: 60,
