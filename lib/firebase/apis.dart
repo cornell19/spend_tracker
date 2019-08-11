@@ -41,6 +41,33 @@ class Apis {
     _checkStatus(response);
   }
 
+  Future<List<ItemType>> getTypes() async {
+    final url = '$database/$documents/type';
+    var response = await http.get(url, headers: _createHeader());
+    _checkStatus(response);
+    return ItemType.fromJson(response.body);
+  }
+
+  Future createType(ItemType type) async {
+    final url = '$database/$documents/type';
+    var response = await http.post(
+      url,
+      headers: _createHeader(),
+      body: type.toJson(),
+    );
+    _checkStatus(response);
+  }
+
+  Future updateType(ItemType type) async {
+    final url = '$database/${type.urlId}';
+    var response = await http.patch(
+      url,
+      headers: _createHeader(),
+      body: type.toJson(),
+    );
+    _checkStatus(response);
+  }
+
   Future login(String email, String password) async {
     final String url =
         '$server/identitytoolkit/v3/relyingparty/verifyPassword?key=$key';

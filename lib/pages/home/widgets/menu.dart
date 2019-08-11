@@ -52,7 +52,10 @@ class Menu extends StatelessWidget {
                 title: 'Types',
                 color: color,
                 icon: Icons.widgets,
-                onTap: () => onNavigate(context, '/types')),
+                onTap: () {
+                  bloc.getTypes();
+                  onNavigate(context, '/types');
+                }),
             Divider(
               height: 20,
               color: Colors.black,

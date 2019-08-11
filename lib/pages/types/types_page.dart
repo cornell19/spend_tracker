@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:spend_tracker/database/db_provider.dart';
-import 'package:spend_tracker/models/Item_type.dart';
+import 'package:spend_tracker/firebase/firebase_bloc.dart';
+import 'package:spend_tracker/models/models.dart';
 import 'package:spend_tracker/pages/types/type_page.dart';
 
 class TypesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var dbProvider = Provider.of<DbProvider>(context);
+    var bloc = Provider.of<FirebaseBloc>(context);
     return Scaffold(
         appBar: AppBar(
           title: const Text('Types'),
@@ -25,8 +25,8 @@ class TypesPage extends StatelessWidget {
             ),
           ],
         ),
-        body: FutureBuilder<List<ItemType>>(
-          future: dbProvider.getAllTypes(),
+        body: StreamBuilder<List<ItemType>>(
+          stream: bloc.itemTypes,
           builder: (_, AsyncSnapshot<List<ItemType>> snapshot) {
             if (snapshot.hasError)
               return Center(
@@ -52,7 +52,7 @@ class TypesPage extends StatelessWidget {
 
                   return ListTile(
                     leading: Hero(
-                      tag: type.id,
+                      tag: type.urlId,
                       child: Icon(type.iconData),
                     ),
                     title: Text(type.name),
