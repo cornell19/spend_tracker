@@ -9,11 +9,40 @@ class FirebaseBloc {
   final _securityPubSub = PublishSubject<bool>();
   final _accountsBehavSub = BehaviorSubject<List<Account>>();
   final _typesBehavSub = BehaviorSubject<List<ItemType>>();
+  final _itemsBehavSub = BehaviorSubject<List<Item>>();
+
   final Apis apis;
 
   Observable<bool> get loginStatus => _securityPubSub.stream;
   Observable<List<Account>> get accounts => _accountsBehavSub.stream;
   Observable<List<ItemType>> get itemTypes => _typesBehavSub.stream;
+  Observable<List<Item>> get items => _itemsBehavSub.stream;
+
+  Future deleteItem(Item item) async {
+    try {
+      await apis.deleteItem(item);
+    } catch (err) {
+      _itemsBehavSub.sink.addError(err.toString());
+    }
+  }
+
+  Future getItems() async {
+    try {
+      var items = await apis.getItems();
+      _itemsBehavSub.sink.add(items);
+    } catch (err) {
+      _itemsBehavSub.sink.addError(err.toString());
+    }
+  }
+
+  Future createItem(Item item) async {
+    try {
+      await apis.createItem(item);
+      await getItems();
+    } catch (err) {
+      _itemsBehavSub.sink.addError(err.toString());
+    }
+  }
 
   Future getTypes() async {
     try {
@@ -86,5 +115,6 @@ class FirebaseBloc {
     _securityPubSub.close();
     _accountsBehavSub.close();
     _typesBehavSub.close();
+    _itemsBehavSub.close();
   }
 }

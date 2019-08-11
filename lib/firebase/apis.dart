@@ -12,6 +12,29 @@ class Apis {
 
   String _securityToken;
 
+  Future deleteItem(Item item) async {
+    final url = '$database/${item.urlId}';
+    var response = await http.delete(url, headers: _createHeader());
+    _checkStatus(response);
+  }
+
+  Future<List<Item>> getItems() async {
+    final url = '$database/$documents/item';
+    var response = await http.get(url, headers: _createHeader());
+    _checkStatus(response);
+    return Item.fromJson(response.body);
+  }
+
+  Future createItem(Item item) async {
+    final url = '$database/$documents/item';
+    var response = await http.post(
+      url,
+      headers: _createHeader(),
+      body: item.toJson(),
+    );
+    _checkStatus(response);
+  }
+
   Future<List<Account>> getAccounts() async {
     final url = '$database/$documents/account';
     var response = await http.get(url, headers: _createHeader());
