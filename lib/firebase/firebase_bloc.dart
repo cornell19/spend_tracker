@@ -18,9 +18,27 @@ class FirebaseBloc {
   Observable<List<ItemType>> get itemTypes => _typesBehavSub.stream;
   Observable<List<Item>> get items => _itemsBehavSub.stream;
 
+  Balance get balance {
+    final items = _itemsBehavSub.value;
+    double withdraw = 0;
+    double deposit = 0;
+    items.forEach((i) {
+      if (i.isDeposit)
+        deposit += i.amount;
+      else
+        withdraw += i.amount;
+    });
+    return Balance(
+      deposit: deposit,
+      withdraw: withdraw,
+      total: deposit - withdraw,
+    );
+  }
+
   Future deleteItem(Item item) async {
     try {
       await apis.deleteItem(item);
+      await getItems();
     } catch (err) {
       _itemsBehavSub.sink.addError(err.toString());
     }
@@ -104,7 +122,12 @@ class FirebaseBloc {
 
   void login(String email, String password) async {
     try {
+      var futures = <Future>[];
       await apis.login(email, password);
+      futures.add(getAccounts());
+      futures.add(getTypes());
+      futures.add(getItems());
+      await Future.wait(futures);
       _securityPubSub.sink.add(true);
     } catch (err) {
       _securityPubSub.sink.addError(err.toString());

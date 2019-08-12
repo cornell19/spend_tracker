@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:spend_tracker/database/db_provider.dart';
 import 'package:spend_tracker/firebase/firebase_bloc.dart';
 import 'package:spend_tracker/models/models.dart';
 import 'package:spend_tracker/routes.dart';
@@ -63,8 +62,6 @@ class _ItemPageState extends State<ItemPage> with RouteAware {
               setState(() {
                 _isSaving = true;
               });
-
-              var dbProvider = Provider.of<DbProvider>(context);
               _formData['date'] = DateFormat('MM/dd/yyyy').format(_dateTime);
               var item = Item.fromMap(_formData);
               await bloc.createItem(item);

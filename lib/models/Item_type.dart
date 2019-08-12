@@ -5,12 +5,11 @@ import 'package:spend_tracker/support/icon_helper.dart';
 
 class ItemType {
   ItemType({
-    this.id,
     this.urlId,
     @required this.name,
     @required this.codePoint,
   });
-  final int id;
+
   final String urlId;
   final String name;
   final int codePoint;
@@ -18,7 +17,6 @@ class ItemType {
   IconData get iconData => IconHelper.createIconData(codePoint);
 
   Map<String, dynamic> toMap() => {
-        'id': id,
         'urlId': urlId,
         'name': name,
         'codePoint': codePoint,
@@ -49,7 +47,6 @@ class ItemType {
   }
 
   factory ItemType.fromMap(Map<String, dynamic> map) => ItemType(
-        id: map['id'],
         urlId: map['urlId'],
         name: map['name'],
         codePoint: map['codePoint'],

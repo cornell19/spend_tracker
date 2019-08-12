@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:spend_tracker/database/db_provider.dart';
+import 'package:spend_tracker/firebase/firebase_bloc.dart';
 import 'package:spend_tracker/models/balance.dart';
 import 'package:spend_tracker/pages/home/widgets/menu.dart';
 import 'package:spend_tracker/pages/items/item_page.dart';
@@ -38,9 +38,8 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    var dbProvider = Provider.of<DbProvider>(context);
-    var balance = await dbProvider.getBalance();
-    _setHeightBalances(balance);
+
+    _setHeightBalances();
     routeObserver.subscribe(this, ModalRoute.of(context));
     WidgetsBinding.instance.addObserver(this);
   }
@@ -61,6 +60,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   void didPopNext() {
+    _setHeightBalances();
     _controller.forward();
   }
 
@@ -69,7 +69,10 @@ class _HomePageState extends State<HomePage>
     _controller.reset();
   }
 
-  void _setHeightBalances(Balance balance) {
+  void _setHeightBalances() {
+    var bloc = Provider.of<FirebaseBloc>(context);
+    Balance balance = bloc.balance;
+
     var maxAmount =
         balance.withdraw > balance.deposit ? balance.withdraw : balance.deposit;
     if (maxAmount == 0) {

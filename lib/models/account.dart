@@ -6,14 +6,12 @@ import 'package:spend_tracker/support/icon_helper.dart';
 
 class Account {
   Account({
-    this.id,
     this.urlId,
     @required this.name,
     @required this.codePoint,
     @required this.balance,
   });
 
-  final int id;
   final String urlId;
   final String name;
   final int codePoint;
@@ -22,7 +20,6 @@ class Account {
   IconData get iconData => IconHelper.createIconData(codePoint);
 
   Map<String, dynamic> toMap() => {
-        'id': id,
         'urlId': urlId,
         'name': name,
         'codePoint': codePoint,
@@ -30,7 +27,6 @@ class Account {
       };
 
   factory Account.fromMap(Map<String, dynamic> map) => Account(
-        id: map['id'],
         urlId: map['urlId'],
         name: map['name'],
         codePoint: map['codePoint'],
