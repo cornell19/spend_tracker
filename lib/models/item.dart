@@ -4,37 +4,29 @@ import 'package:meta/meta.dart';
 
 class Item {
   Item(
-      {this.id,
-      this.urlId,
+      {this.urlId,
       @required this.description,
       @required this.amount,
       @required this.isDeposit,
       @required this.date,
-      this.accountId,
-      this.typeId,
       this.accountUrlId,
       this.typeUrlId});
 
-  final int id;
   final String urlId;
   final String description;
   final double amount;
   final bool isDeposit;
   final String date;
-  final int accountId;
-  final int typeId;
+
   final String accountUrlId;
   final String typeUrlId;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
         'urlId': urlId,
         'description': description,
         'amount': amount,
         'isDeposit': isDeposit,
         'date': date,
-        'accountId': accountId,
-        'typeId': typeId,
         'accountUrlId': accountUrlId,
         'typeUrlId': typeUrlId
       };
@@ -72,15 +64,12 @@ class Item {
   }
 
   factory Item.fromMap(Map<String, dynamic> map) => Item(
-        id: map['id'],
         urlId: map['urlId'],
         description: map['description'],
         amount: map['amount'],
         isDeposit:
             map['isDeposit'] == 1 || map['isDeposit'] == true ? true : false,
         date: map['date'],
-        accountId: map['accountId'],
-        typeId: map['typeId'],
         accountUrlId: map['accountUrlId'],
         typeUrlId: map['typeUrlId'],
       );

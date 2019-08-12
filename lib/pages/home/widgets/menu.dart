@@ -6,7 +6,7 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryColor;
-    var bloc = Provider.of<FirebaseBloc>(context);
+
     return SizedBox(
       width: 150,
       child: Drawer(
@@ -28,13 +28,11 @@ class Menu extends StatelessWidget {
               color: Colors.black,
             ),
             _MenuItem(
-                title: 'Accounts',
-                color: color,
-                icon: Icons.account_balance,
-                onTap: () {
-                  bloc.getAccounts();
-                  onNavigate(context, '/accounts');
-                }),
+              title: 'Accounts',
+              color: color,
+              icon: Icons.account_balance,
+              onTap: () => onNavigate(context, '/accounts'),
+            ),
             Divider(
               height: 20,
               color: Colors.black,
@@ -49,13 +47,11 @@ class Menu extends StatelessWidget {
               color: Colors.black,
             ),
             _MenuItem(
-                title: 'Types',
-                color: color,
-                icon: Icons.widgets,
-                onTap: () {
-                  bloc.getTypes();
-                  onNavigate(context, '/types');
-                }),
+              title: 'Types',
+              color: color,
+              icon: Icons.widgets,
+              onTap: () => onNavigate(context, '/types'),
+            ),
             Divider(
               height: 20,
               color: Colors.black,

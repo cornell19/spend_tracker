@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:spend_tracker/database/db_provider.dart';
+import 'package:spend_tracker/firebase/firebase_bloc.dart';
 import 'package:spend_tracker/models/item.dart';
 
 class ItemsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var dbProvider = Provider.of<DbProvider>(context);
+    var bloc = Provider.of<FirebaseBloc>(context);
     return Scaffold(
         appBar: AppBar(
           title: const Text('Items'),
         ),
-        body: FutureBuilder<List<Item>>(
-          future: dbProvider.getAllItems(),
+        body: StreamBuilder<List<Item>>(
+          stream: bloc.items,
           builder: (_, AsyncSnapshot<List<Item>> snapshot) {
             if (snapshot.hasError)
               return Center(
@@ -38,10 +38,10 @@ class ItemsPage extends StatelessWidget {
               itemBuilder: (_, int index) {
                 var item = items[index];
                 return Dismissible(
-                  key: ObjectKey(item.id),
+                  key: ObjectKey(item.urlId),
                   confirmDismiss: (DismissDirection direction) async {
                     if (direction == DismissDirection.endToStart) {
-                      await dbProvider.deleteItem(item);
+                      await bloc.deleteItem(item);
                       return true;
                     }
                     return false;
