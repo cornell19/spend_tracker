@@ -1,4 +1,4 @@
-package com.example.spend_tracker;
+package com.manning.spend_tracker;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
