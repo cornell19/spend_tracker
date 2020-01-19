@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:spend_tracker/models/models.dart';
+import 'package:spend_tracker/models/models.dart' as models;
 
 class Apis {
   static const String server = 'https://www.googleapis.com';
@@ -12,20 +12,20 @@ class Apis {
 
   String _securityToken;
 
-  Future deleteItem(Item item) async {
+  Future deleteItem(models.Item item) async {
     final url = '$database/${item.urlId}';
     var response = await http.delete(url, headers: _createHeader());
     _checkStatus(response);
   }
 
-  Future<List<Item>> getItems() async {
+  Future<List<models.Item>> getItems() async {
     final url = '$database/$documents/item';
     var response = await http.get(url, headers: _createHeader());
     _checkStatus(response);
-    return Item.fromJson(response.body);
+    return models.Item.fromJson(response.body);
   }
 
-  Future createItem(Item item) async {
+  Future createItem(models.Item item) async {
     final url = '$database/$documents/item';
     var response = await http.post(
       url,
@@ -35,14 +35,14 @@ class Apis {
     _checkStatus(response);
   }
 
-  Future<List<Account>> getAccounts() async {
+  Future<List<models.Account>> getAccounts() async {
     final url = '$database/$documents/account';
     var response = await http.get(url, headers: _createHeader());
     _checkStatus(response);
-    return Account.fromJson(response.body);
+    return models.Account.fromJson(response.body);
   }
 
-  Future createAccount(Account account) async {
+  Future createAccount(models.Account account) async {
     final url = '$database/$documents/account';
 
     var response = await http.post(
@@ -53,7 +53,7 @@ class Apis {
     _checkStatus(response);
   }
 
-  Future updateAccount(Account account) async {
+  Future updateAccount(models.Account account) async {
     final url = '$database/${account.urlId}';
 
     var response = await http.patch(
@@ -64,14 +64,14 @@ class Apis {
     _checkStatus(response);
   }
 
-  Future<List<ItemType>> getTypes() async {
+  Future<List<models.ItemType>> getTypes() async {
     final url = '$database/$documents/type';
     var response = await http.get(url, headers: _createHeader());
     _checkStatus(response);
-    return ItemType.fromJson(response.body);
+    return models.ItemType.fromJson(response.body);
   }
 
-  Future createType(ItemType type) async {
+  Future createType(models.ItemType type) async {
     final url = '$database/$documents/type';
     var response = await http.post(
       url,
@@ -81,7 +81,7 @@ class Apis {
     _checkStatus(response);
   }
 
-  Future updateType(ItemType type) async {
+  Future updateType(models.ItemType type) async {
     final url = '$database/${type.urlId}';
     var response = await http.patch(
       url,
@@ -107,7 +107,7 @@ class Apis {
     _checkStatus(response);
 
     var map = json.decode(response.body);
-    _securityToken = LoginResponse.fromMap(map).idToken;
+    _securityToken = models.LoginResponse.fromMap(map).idToken;
   }
 
   void _checkStatus(http.Response response) {

@@ -122,6 +122,7 @@ class _ItemPageState extends State<ItemPage> with RouteAware {
                         if (value.isEmpty) return 'Required';
                         if (double.tryParse(value) == null)
                           return 'Invalid number';
+                        return null;
                       },
                       onSaved: (String value) =>
                           _formData['amount'] = double.parse(value),

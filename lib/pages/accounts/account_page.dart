@@ -133,9 +133,8 @@ class _AccountPageState extends State<AccountPage>
                           initialValue:
                               widget.account != null ? widget.account.name : '',
                           decoration: InputDecoration(labelText: 'Name'),
-                          validator: (String value) {
-                            if (value.isEmpty) return 'Required';
-                          },
+                          validator: (String value) =>
+                              value.isEmpty ? 'Required' : null,
                           onSaved: (String value) => _data['name'] = value,
                         ),
                       ),
@@ -152,6 +151,7 @@ class _AccountPageState extends State<AccountPage>
                             if (value.isEmpty) return 'Required';
                             if (double.tryParse(value) == null)
                               return 'Invalid number';
+                            return null;
                           },
                           onSaved: (String value) =>
                               _data['balance'] = double.parse(value),

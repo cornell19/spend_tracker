@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:spend_tracker/firebase/firebase_bloc.dart';
 
 class Menu extends StatelessWidget {
   @override

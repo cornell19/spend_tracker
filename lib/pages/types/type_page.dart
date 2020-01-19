@@ -105,9 +105,8 @@ class _TypePageState extends State<TypePage> {
                     TextFormField(
                       initialValue: widget.type != null ? widget.type.name : '',
                       decoration: InputDecoration(labelText: 'Name'),
-                      validator: (String value) {
-                        if (value.isEmpty) return 'Required';
-                      },
+                      validator: (String value) =>
+                          value.isEmpty ? 'Required' : null,
                       onSaved: (String value) => _data['name'] = value,
                     ),
                   ],
