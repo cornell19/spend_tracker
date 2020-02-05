@@ -12,42 +12,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  double _withdraw = 0;
-  double _deposit = 0;
-  double _wHeight = 0;
-  double _dHeight = 0;
-  double _balance = 0;
+  Balance _balance;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     var dbProvider = Provider.of<DbProvider>(context);
     var balance = await dbProvider.getBalance();
-    _setHeightBalances(balance);
-  }
-
-  void _setHeightBalances(Balance balance) {
-    var maxAmount =
-        balance.withdraw > balance.deposit ? balance.withdraw : balance.deposit;
-    if (maxAmount == 0) {
-      setState(() {
-        _wHeight = 0;
-        _dHeight = 0;
-        _withdraw = 0;
-        _deposit = 0;
-        _balance = 0;
-      });
-      return;
-    }
-    var maxHeight = MediaQuery.of(context).size.height - 284;
-    var wHeight = (balance.withdraw / maxAmount) * maxHeight;
-    var dHeight = (balance.deposit / maxAmount) * maxHeight;
     setState(() {
-      _wHeight = wHeight;
-      _dHeight = dHeight;
-      _withdraw = balance.withdraw;
-      _deposit = balance.deposit;
-      _balance = balance.total;
+      _balance = balance;
     });
   }
 
@@ -70,20 +43,41 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _TotalBudget(amount: formatter.format(_balance)),
-          Container(
-              padding: EdgeInsets.only(bottom: 50),
-              height: MediaQuery.of(context).size.height - 196,
-              child: Row(
+          _TotalBudget(
+              amount: formatter.format(_balance == null ? 0 : _balance.total)),
+          Expanded(
+            flex: 1,
+            child: LayoutBuilder(builder: (_, BoxConstraints constraints) {
+              var maxHeight = constraints.biggest.height;
+              maxHeight = maxHeight - 50;
+              double dHeight = 0;
+              double wHeight = 0;
+              if (_balance == null ||
+                  (_balance.deposit == 0 && _balance.withdraw == 0)) {
+                return Container(height: maxHeight);
+              }
+              if (_balance.withdraw > _balance.deposit) {
+                wHeight = maxHeight;
+                dHeight = (maxHeight * _balance.deposit) / _balance.withdraw;
+              } else {
+                dHeight = maxHeight;
+                wHeight = (maxHeight * _balance.withdraw) / _balance.deposit;
+              }
+              return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  _BarLine(_wHeight, Colors.red, 'Withdraw',
-                      formatter.format(_withdraw)),
-                  _BarLine(_dHeight, Colors.green, 'Deposit',
-                      formatter.format(_deposit))
+                  _BarLine(wHeight, Colors.red, 'Withdraw',
+                      formatter.format(_balance.withdraw)),
+                  _BarLine(dHeight, Colors.green, 'Deposit',
+                      formatter.format(_balance.deposit))
                 ],
-              )),
+              );
+            }),
+          ),
+          SizedBox(
+            height: 40,
+          ),
         ],
       ),
       floatingActionButton: PopupMenuButton(
@@ -93,22 +87,22 @@ class _HomePageState extends State<HomePage> {
           color: Theme.of(context).primaryColor,
         ),
         itemBuilder: (_) => [
-              PopupMenuItem(
-                value: 1,
-                child: const Text('Deposit'),
-              ),
-              PopupMenuItem(
-                value: 2,
-                child: const Text('Withdraw'),
-              )
-            ],
+          PopupMenuItem(
+            value: 1,
+            child: const Text('Deposit'),
+          ),
+          PopupMenuItem(
+            value: 2,
+            child: const Text('Withdraw'),
+          )
+        ],
         onSelected: (int value) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => ItemPage(
-                    isDeposit: value == 1,
-                  ),
+                isDeposit: value == 1,
+              ),
             ),
           );
         },
