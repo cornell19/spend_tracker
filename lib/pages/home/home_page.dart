@@ -16,11 +16,7 @@ class _HomePageState extends State<HomePage>
     with RouteAware, WidgetsBindingObserver, TickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _animation;
-  double _withdraw = 0;
-  double _deposit = 0;
-  double _wHeight = 0;
-  double _dHeight = 0;
-  double _balance = 0;
+  Balance _balance;
   double _opacity = 0.2;
   double _fontSize = 1;
 
@@ -73,27 +69,8 @@ class _HomePageState extends State<HomePage>
     var bloc = Provider.of<FirebaseBloc>(context);
     Balance balance = bloc.balance;
 
-    var maxAmount =
-        balance.withdraw > balance.deposit ? balance.withdraw : balance.deposit;
-    if (maxAmount == 0) {
-      setState(() {
-        _wHeight = 0;
-        _dHeight = 0;
-        _withdraw = 0;
-        _deposit = 0;
-        _balance = 0;
-      });
-      return;
-    }
-    var maxHeight = MediaQuery.of(context).size.height - 304;
-    var wHeight = (balance.withdraw / maxAmount) * maxHeight;
-    var dHeight = (balance.deposit / maxAmount) * maxHeight;
     setState(() {
-      _wHeight = wHeight;
-      _dHeight = dHeight;
-      _withdraw = balance.withdraw;
-      _deposit = balance.deposit;
-      _balance = balance.total;
+      _balance = balance;
       _opacity = 1.0;
       _fontSize = 40;
     });
@@ -123,22 +100,45 @@ class _HomePageState extends State<HomePage>
             duration: Duration(seconds: 4),
             child: _TotalBudget(
               fontSize: _fontSize,
-              amount: formatter.format(_balance),
+              amount: formatter.format(_balance == null ? 0 : _balance.total),
             ),
           ),
-          Container(
-              padding: EdgeInsets.only(bottom: 50),
-              height: MediaQuery.of(context).size.height - 220,
-              child: Row(
+          Expanded(
+            flex: 1,
+            child: LayoutBuilder(builder: (context, constraints) {
+              var maxHeight = constraints.biggest.height;
+              maxHeight = maxHeight - 50;
+              double dHeight = 0;
+              double wHeight = 0;
+
+              if (_balance == null ||
+                  (_balance.deposit == 0 && _balance.withdraw == 0)) {
+                return Container();
+              }
+
+              if (_balance.withdraw > _balance.deposit) {
+                wHeight = maxHeight;
+                dHeight = (maxHeight * _balance.deposit) / _balance.withdraw;
+              } else {
+                dHeight = maxHeight;
+                wHeight = (maxHeight * _balance.withdraw) / _balance.deposit;
+              }
+
+              return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  _BarLine(_wHeight, Colors.red, 'Withdraw',
-                      formatter.format(_withdraw), _animation),
-                  _BarLine(_dHeight, Colors.green, 'Deposit',
-                      formatter.format(_deposit), _animation)
+                  _BarLine(wHeight, Colors.red, 'Withdraw',
+                      formatter.format(_balance.withdraw), _animation),
+                  _BarLine(dHeight, Colors.green, 'Deposit',
+                      formatter.format(_balance.deposit), _animation),
                 ],
-              )),
+              );
+            }),
+          ),
+          SizedBox(
+            height: 40,
+          ),
         ],
       ),
       floatingActionButton: PopupMenuButton(
